@@ -716,8 +716,6 @@ function updateGame () {                                //updates Game state
             roach[i].draw();
         }
         if (!player.alive) {
-            rand.currentTime = 0;					  //death sound
-            rand.play();
             death = setInterval(curtain, 10)
             return;                                   //skips player drawing
         }                                             //if the player is dead
