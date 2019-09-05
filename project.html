@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+
+<head>
+    <title>JSDROD</title>
+    <meta charset="UTF-8">
+    <script src="project.js" defer></script>
+    <script src="maps.js"></script>
+    <style>
+        
+        .wrapper {
+            position: relative;
+            width: 620px;
+            height: 590px
+        }
+        
+        .wrapper canvas {
+            position: absolute;
+            background: transparent;
+            border-style: solid;
+            border-color: grey;
+        }
+		img {
+			z-index: -1;
+			position: relative;
+			margin: -40px 0 -50px 0;
+		}
+    </style>
+</head>
+
+<body onload="initialize()">
+    <h1>A Poor DROD Clone/Remake</h1>
+    <div class="wrapper">
+        <canvas id="field" width="620px" height="572px"></canvas>
+        <canvas id="draw" width="620px" height="572px"></canvas>
+        <canvas id="effect" width="620" height="592"></canvas>
+    </div>
+    <div>
+        <h2>Stats</h2>
+        <table id="stats">
+            <tr>
+                <th>Moves:</th>
+                <td id="moves">0</td>
+            </tr>
+            <tr>
+                <th>Restarts:</th>
+                <td id="deaths">0</td>
+            </tr>
+            <tr>
+                <th>Roaches Killed:</th>
+                <td id="kills">0</td>
+            </tr>
+        </table>
+		<p>DROD (Deadly Rooms of Death) is a turn-based puzzle game where you defeat all the monsters in a room with your sword.</p>
+		Play the demo of DROD: King Dugan's Dungeon at <a href="http://caravelgames.com/Articles/Games_2/FlashDROD/KDDL.html" target="_blank">Caravel Games.</a>
+    </div>
+	
+    <div id="help">
+		<h3>Help</h3>
+		<h4>Controls:</h4>
+        <img src="controls.png">
+		<h4>Explanation</h4>
+		<ul>
+		<li>The red block is the player and the gray block is their sword. Use it to strike orbs and kill roaches</li>
+		<li>The q and w key rotate the character</li>
+		<li>The numpad or YUIHJKNM. keys move the player in 8 directions</li>
+		<li>5 or J are used to skip a turn without changing your position</li>
+		<li>Orbs manipulate doors by opening or closing them.</li>
+		<li>Black squares represent roaches</li>
+		<li>Roaches will always move after you have made your move</li>
+		<li>Grey squares with white squares represent Roach queens</li>
+		<li>Roach queens move away from the player</li>
+		<li>Roach queens also spawn roaches in their surrounding squares every 30 turns</li>
+		<li>light blue squares are stairs. You win if you touch one.</li>
+		</ul>
+		
+    </div>
+</body>
