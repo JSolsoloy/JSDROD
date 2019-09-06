@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Test DROD</title>
+    <style>
+        body {
+            background-color: #122;
+            color: #ddd;
+        }
+
+        #wrapper {
+            border: 1px solid purple;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #canvases {
+            display: grid;
+            grid-template-columns: 1fr;
+        }
+
+        #canvases canvas {
+            grid-row-start: 1;
+            grid-column-start: 1;
+            background: transparent;
+            border: 1px solid red;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="wrapper">
+        <div id="canvases">
+
+        </div>
+</body>
+<script>
+    const COLORS = {
+        player: '#00d',
+        sword: '#888',
+        floor1: { 0: '#eee', 1: '#fff' },
+        floor2: { 0: 'e6e6ff', 1: 'ccccff' },
+        wall1: '#d9266e',
+        wall2: '#bf8040'
+    }
+    const tiles = {
+        floor: 0,
+        wall: 1,
+        alt: 2
+    }
+    const map = [
+        [
+            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1],
+            [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1],
+            [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1],
+            [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1],
+            [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1],
+            [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1],
+            [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1],
+            [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1],
+            [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1],
+            [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1],
+            [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1],
+            [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1],
+            [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1],
+            [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1],
+            [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1],
+            [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1],
+            [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1],
+            [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1],
+            [1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            [1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            [1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            [1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+        ]
+    ]
+    const ROWS = map[0].length, COLS = map[0][0].length, TILE_SIZE = 32
+    const WIDTH = COLS * TILE_SIZE, HEIGHT = ROWS * TILE_SIZE
+    const LEFT = Math.PI / 4, RIGHT = -LEFT
+    const sword = new Vector(1, 1)
+
+    function Vector(x, y) {
+        this.x = x || 0
+        this.y = y || 0
+        this.set = (x, y) => {
+            this.x = x
+            this.y = y
+        }
+        this.add = vec => new Vector(this.x + vec.x, this.y + vec.y)
+        this.sub = vec => new Vector(this.x - vec.x, this.y - vec.y)
+        this.scale = k => new Vector(this.x * k, this.y * k)
+        this.toString = () => `(${this.x}, ${this.y})`
+    }
+
+    function canvas() {
+        const playField = document.createElement('canvas')
+        const ctx = playField.getContext('2d')
+        let P1 = new Vector(0, 0), P2 = new Vector(0, 0)
+        playField.height = HEIGHT
+        playField.width = WIDTH
+        document.getElementById('canvases').appendChild(playField)
+
+        return {
+            draw: (v, color) => {
+                P1.set(v.x, v.y)
+                P1 = P1.scale(TILE_SIZE)
+                ctx.fillStyle = color === undefined ? '#000' : color
+                ctx.fillRect(P1.x, P1.y, TILE_SIZE, TILE_SIZE)
+            },
+            clear: v => {
+                P1.set(v.x, v.y)
+                P1 = P1.scale(TILE_SIZE)
+                ctx.clearRect(P1.x, P1.y, TILE_SIZE, TILE_SIZE)
+            },
+            drawRect: (v1, v2, color) => {
+                P1.set(v1.x, v1.y)
+                P2.set(v2.x, v2.y)
+                P1 = P1.scale(TILE_SIZE)
+                P2 = P2.scale(TILE_SIZE)
+                ctx.fillStyle = color === undefined ? '#000' : color
+                ctx.fillRect(P1.x, P1.y, P2.x - P1.x, P2.y - P1.y)
+            },
+            clearRect: (v1, v2) => {
+                P1.set(v1.x, v1.y)
+                P2.set(v2.x, v2.y)
+                P1 = P1.scale(TILE_SIZE)
+                P2 = P2.scale(TILE_SIZE)
+                ctx.clearRect(P1.x, P1.y, P2.x - P1.x, P2.y - P1.y)
+            }
+        }
+    }
+
+    ; (function drawBackground() {
+        const ctx = canvas()
+        for (let i = 0; i < ROWS; i++) {
+            for (let j = 0; j < COLS + 1; j++) {
+                let color = (i + j) % 2 == 0 ? COLORS.floor1[0] : COLORS.floor1[1]
+                if (map[0][i][j] === tiles.wall) color = COLORS.wall1
+                ctx.draw(new Vector(j, i), color)
+            }
+        }
+    })()
+
+    const BOARD = canvas()
+
+    function Player(coords, sword) {
+        this.pos = coords || new Vector(Math.floor(COLS / 2), Math.floor(ROWS / 2))
+        this.localSword = new Vector(1, 1)
+        this.sword = sword || this.pos.add(this.localSword)
+        this.draw = () => {
+            BOARD.draw(this.pos, COLORS.player)
+            BOARD.draw(this.sword, COLORS.sword)
+        }
+        this.move = dir => {
+            if (!this.collisionCheck(this.pos.add(dir))) {
+                BOARD.clear(this.pos)
+                BOARD.clear(this.sword)
+                this.pos = this.pos.add(dir)
+                this.sword = this.sword.add(dir)
+                this.draw()
+            }
+        }
+        this.rotate = dir => {
+            dir *= Math.PI / 4
+            let xx = this.localSword.x
+            this.localSword.x = Math.round(this.localSword.x * Math.cos(dir) - this.localSword.y * Math.sin(dir))
+            this.localSword.y = Math.round(xx * Math.sin(dir) + this.localSword.y * Math.cos(dir))
+            BOARD.clear(this.sword)
+            this.sword.set(this.pos.x, this.pos.y)
+            this.sword = this.sword.add(this.localSword)
+            this.draw()
+        }
+        this.collisionCheck = pos => {
+            return map[0][pos.y][pos.x] !== 0
+        }
+        document.addEventListener('keydown', e => {
+            switch (e.key) {
+                case 'y': this.move(new Vector(-1, -1))
+                    break
+                case 'u': this.move(new Vector(0, -1))
+                    break
+                case 'i': this.move(new Vector(1, -1))
+                    break
+                case 'h': this.move(new Vector(-1, 0))
+                    break
+                case 'j': this.move(new Vector(0, 0))
+                    break
+                case 'k': this.move(new Vector(1, 0))
+                    break
+                case 'n': this.move(new Vector(-1, 1))
+                    break
+                case 'm': this.move(new Vector(0, 1))
+                    break
+                case ',': this.move(new Vector(1, 1))
+                    break
+                case 'q': this.rotate(-1)
+                    break
+                case 'w': this.rotate(1)
+                    break
+            }
+        })
+        this.draw()
+    }
+    const PLAYER = new Player()
+</script>
+
+</html>
